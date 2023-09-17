@@ -9,17 +9,22 @@ const connection = mysql.createConnection({
     password: '3509',
     database: 'my_db'
 });
-connection.connect();
-connection.query('SELECT * from Users', (error, rows, fields) => {
-    if (error) throw error;
-    console.log('User info is: ', rows);
-});
-
-connection.end();
 
 app.get('/', (req, res) => {
     console.log("hello world")
     res.send('Hello World!')
+})
+
+app.get("/users", (req, res) => {
+    connection.connect();
+    connection.query('SELECT * from Users', (error, rows, fields) => {
+        if (error) throw error;
+        console.log('User info is: ', rows);
+        res.send(rows)
+    });
+
+    connection.end();
+
 })
 
 app.listen(port, () => {
