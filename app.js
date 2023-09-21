@@ -1,13 +1,23 @@
 const express = require('express')
 const app = express()
-const port = 3001
+const port = 3000
 const mysql = require('mysql');
+if (process.env.NODE_ENV === "production") {
+    require('dotenv').config({ path: "config/env/.env.production" });
+
+}
+else {
+    require('dotenv').config({ path: "config/env/.env.development" });
+}
+
+console.log(process.env.DB_HOST)
+
 
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '3509',
-    database: 'my_db'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
 });
 
 app.get('/', (req, res) => {
@@ -16,14 +26,14 @@ app.get('/', (req, res) => {
 })
 
 app.get("/users", (req, res) => {
-    connection.connect();
+    //connection.connect();
     connection.query('SELECT * from Users', (error, rows, fields) => {
         if (error) throw error;
         console.log('User info is: ', rows);
         res.send(rows)
     });
 
-    connection.end();
+    //connection.end();
 
 })
 
