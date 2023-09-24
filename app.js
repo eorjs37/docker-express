@@ -6,11 +6,12 @@ if (process.env.NODE_ENV === "production") {
     require('dotenv').config({ path: "config/env/.env.production" });
 
 }
+else if (process.env.NODE_ENV === 'local') {
+    require('dotenv').config({ path: "config/env/.env.local" });
+}
 else {
     require('dotenv').config({ path: "config/env/.env.development" });
 }
-
-console.log(process.env.DB_HOST)
 
 
 const connection = mysql.createConnection({
