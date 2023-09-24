@@ -1,6 +1,10 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 3000;
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require('socket.io')
+const io = new Server(server)
 const mysql = require('mysql');
 if (process.env.NODE_ENV === "production") {
     require('dotenv').config({ path: "config/env/.env.production" });
@@ -13,6 +17,10 @@ else {
     require('dotenv').config({ path: "config/env/.env.development" });
 }
 
+io.on('connection', (socket) => {
+    console.log('a user connected');
+});
+
 
 const connection = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -22,8 +30,7 @@ const connection = mysql.createConnection({
 });
 
 app.get('/', (req, res) => {
-    console.log("hello world")
-    res.send('Hello World!')
+    res.sendFile(__dirname + '/index.html');
 })
 
 app.get("/users", (req, res) => {
